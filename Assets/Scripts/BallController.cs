@@ -13,6 +13,10 @@ public class BallController : MonoBehaviour
     private int maxHeight = 10;
     public bool BallInPlay = false;
 
+    private void Start(){
+        groundLayerMask = LayerMask.GetMask("Ground");
+    }
+
     public void OnBallReleased(){
         BallInPlay = true;
     }
@@ -34,22 +38,6 @@ public class BallController : MonoBehaviour
         if (!Physics.Raycast(ball.transform.position, Vector3.down, out hit, maxHeight, groundLayerMask))
         { 
             RecallBall();
-        }
-    }
-
-    private void Start(){
-        aggregator = XRSubsystemHelpers.GetFirstRunningSubsystem<HandsAggregatorSubsystem>();
-        groundLayerMask = LayerMask.GetMask("Ground");
-    }
-
-    private void Update(){
-        Test();
-    }
-
-    private void Test(){
-        bool handIsValid = aggregator.TryGetPalmFacingAway(XRNode.LeftHand, out bool isLeftPalmFacingAway);
-        if (isLeftPalmFacingAway){
-            Debug.Log("Left palm facing away");
         }
     }
 }

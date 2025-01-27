@@ -17,20 +17,42 @@ public class PettingController : MonoBehaviour
     private float inactivityCountdown = 0f;
 
     private void FixedUpdate(){
-        if (dogObjectManipulator.IsGrabHovered){
-            if (Vector3.Distance(rightHand.position, rightHandPosition) > pettingMovementThreshold){
-                if (inactivityCountdown <= 0){
-                    PettingStart?.Invoke();
-                }
-                inactivityCountdown = secondsOfInactivityBeforeStoppingPetting;
-            }
+        CheckForPets();
+        CountDown();
+        UpdateHandPositions();
+    }
+
+    private void CheckForPets(){
+        bool isTouching = dogObjectManipulator.IsGrabHovered;
+        if (!isTouching){
+            return;
         }
-        if (inactivityCountdown > 0){
-            inactivityCountdown -= Time.deltaTime;
-            if (inactivityCountdown <= 0){
-                PettingEnd?.Invoke();
-            }
+
+        // Yes, this does not check which hand is petting the dog
+        bool isMoving = Vector3.Distance(rightHand.position, rightHandPosition) > pettingMovementThreshold || Vector3.Distance(leftHand.position, leftHandPosition) > pettingMovementThreshold;
+        if (!isMoving){
+            return;
         }
+
+        if (inactivityCountdown <= 0){
+            PettingStart?.Invoke();
+        }
+        inactivityCountdown = secondsOfInactivityBeforeStoppingPetting;
+    }
+
+    private void CountDown(){
+        if (inactivityCountdown <= 0){
+            return;
+        }
+        
+        inactivityCountdown -= Time.deltaTime;
+        if (inactivityCountdown <= 0){
+            PettingEnd?.Invoke();
+        }
+    }
+
+    private void UpdateHandPositions(){
         rightHandPosition = rightHand.position;
+        leftHandPosition = leftHand.position;
     }
 }

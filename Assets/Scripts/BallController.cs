@@ -1,14 +1,10 @@
 using UnityEngine;
-using MixedReality.Toolkit;
-using MixedReality.Toolkit.Subsystems;
-using UnityEngine.XR;
 
 public class BallController : MonoBehaviour
 {
     [SerializeField] private GameObject ball;
     [SerializeField] private GameObject recallPoint;
 
-    private HandsAggregatorSubsystem aggregator;
     private LayerMask groundLayerMask;
     private int maxHeight = 10;
     public bool BallInPlay = false;
